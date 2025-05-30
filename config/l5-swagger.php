@@ -79,6 +79,7 @@ return [
             */
             'docs' => storage_path('api-docs'),
 
+            'swagger_ui_assets_path' => 'vendor/swagger-api/swagger-ui/dist/',
             /*
              * Absolute path to directory where to export views
             */
