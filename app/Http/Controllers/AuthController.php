@@ -34,6 +34,7 @@ class AuthController extends Controller
      *              required={"name","email","password"},
      *              @OA\Property(property="name", type="string"),
      *              @OA\Property(property="email",format="email", type="string"),
+     *              @OA\Property(property="phone", type="string"),
      *              @OA\Property(property="password", type="string"),
      *              @OA\Property(property="password_confirmation", type="string"),
      *           )
@@ -50,6 +51,7 @@ class AuthController extends Controller
         $request->validate([
             'name'          => ['required', 'string'],
             'email'         => ['required', 'string', 'email', 'unique:users'],
+            'phone'         => ['required', 'string', 'min:8', 'unique:users'],
             'password'      => ['required', 'string', 'min:6', 'confirmed'],
         ]);
 
@@ -73,7 +75,7 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      * path="/login",
-     * description="Login by email and password",
+     * description="Login by password and (email or phone)",
      * operationId="authLogin",
      * tags={"User - Auth"},
      *   @OA\RequestBody(
@@ -81,8 +83,8 @@ class AuthController extends Controller
      *       @OA\MediaType(
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
-     *              required={"email","password"},
-     *              @OA\Property(property="email", format="email" ,type="string"),
+     *              required={"email_or_phone","password"},
+     *              @OA\Property(property="email_or_phone" ,type="string"),
      *              @OA\Property(property="password", type="password"),
      *           )
      *       )
@@ -96,14 +98,22 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate( [
-            'email'    => ['required'],
+            'email_or_phone'    => ['required'],
             'password' => ['required','min:6'],
         ]);
 
+        $user = User::where('email', $request->email_or_phone)->orWhere('phone', $request->email_or_phone)->first();
         //TODO: check if the user verified or not 
 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember??false)) {
-            $user = to_user(Auth::user());
+        if(!$user || !Hash::check($request->password, $user->password))
+        {
+            return response()->json([
+                'message' => 'email or phone or password is incorrect.',
+                'errors' => [
+                    'email_or_phone' => ['email or password is incorrect.']
+                ]
+            ], 422);    
+        }
             $token = $user->createToken('Sanctum', [])->plainTextToken;
             
             return response()->json([
@@ -111,14 +121,6 @@ class AuthController extends Controller
                 'token' => $token,
             ], 200);
         }
-
-        return response()->json([
-            'message' => 'email or password is incorrect.',
-            'errors' => [
-                'email' => ['email or password is incorrect.']
-            ]
-        ], 422);
-    }
 
     /**
      * @OA\Get(

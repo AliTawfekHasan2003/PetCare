@@ -788,6 +788,9 @@
                                         "type": "string",
                                         "format": "email"
                                     },
+                                    "phone": {
+                                        "type": "string"
+                                    },
                                     "password": {
                                         "type": "string"
                                     },
@@ -812,7 +815,7 @@
                 "tags": [
                     "User - Auth"
                 ],
-                "description": "Login by email and password",
+                "description": "Login by password and (email or phone)",
                 "operationId": "authLogin",
                 "requestBody": {
                     "required": true,
@@ -820,13 +823,12 @@
                         "multipart/form-data": {
                             "schema": {
                                 "required": [
-                                    "email",
+                                    "email_or_phone",
                                     "password"
                                 ],
                                 "properties": {
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email"
+                                    "email_or_phone": {
+                                        "type": "string"
                                     },
                                     "password": {
                                         "type": "password"
