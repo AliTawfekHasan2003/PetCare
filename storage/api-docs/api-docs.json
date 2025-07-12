@@ -6,7 +6,7 @@
     },
     "servers": [
         {
-            "url": "https://petcare-production-3202.up.railway.app/api"
+            "url": "https://petcare-production-cc6b.up.railway.app/api"
         },
         {
             "url": "http://127.0.0.1:8000/api"
