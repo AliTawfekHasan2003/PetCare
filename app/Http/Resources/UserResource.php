@@ -16,13 +16,9 @@ class UserResource extends JsonResource
     {
         return [
             'id'                => $this->id, 
-            'nationality'       => new CountryResource($this->whenLoaded('nationality')), 
             'name'              => $this->name, 
             'email'             => $this->email, 
-            'phone_country'     => new CountryResource($this->whenLoaded('phone_country')), 
             'phone'             => $this->phone, 
-            'image'             => $this->image, 
-            'summary'           => $this->summary, 
             'status'            => $this->status,
             'role'                  => $this->roleModel(),
         ];

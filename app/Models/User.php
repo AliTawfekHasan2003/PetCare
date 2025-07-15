@@ -64,4 +64,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Country::class, 'id', 'phone_country_id');
     }
+
+    public function animals()
+    {
+        $this->hasMany(Animal::class);
+    }
 }

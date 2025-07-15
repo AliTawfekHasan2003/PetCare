@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\AnimalController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BreedController;
+use App\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,3 +26,14 @@ Route::post('logout', [AuthController::class, 'logout']);
 Route::put('user', [AuthController::class, 'edit_profile']);
 Route::get('user', [AuthController::class, 'get_profile']);
 Route::delete('user/delete_account', [AuthController::class, 'delete_user']);
+
+//animals
+Route::get('animals', [AnimalController::class, 'index']);
+Route::post('animals', [AnimalController::class, 'store']);
+Route::get('animals/{animal}', [AnimalController::class, 'show']);
+
+//categories
+Route::get('categories', [CategoryController::class, 'index']);
+
+//breeds
+Route::get('breeds', [BreedController::class, 'index']);
