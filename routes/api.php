@@ -16,7 +16,12 @@ use App\Http\Controllers\CategoryController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+use Illuminate\Support\Facades\Storage;
 
+Route::get('/list-files', function() {
+    $files = Storage::disk('public')->allFiles('animals');
+    return response()->json($files);
+});
 //Auth
 Route::post('login'  , [AuthController::class, 'login']);
 Route::post('register' , [AuthController::class, 'register']);
