@@ -16,6 +16,7 @@ class AnimalResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'name' => $this->name,
             'user' => new UserResource($this->whenLoaded('user')),
             'category' => new CategoryResource($this->whenLoaded('category')),
             'breed' => new BreedResource($this->whenLoaded('breed')),

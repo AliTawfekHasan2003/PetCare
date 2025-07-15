@@ -22,6 +22,7 @@ class AnimalRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'name' => ['required', 'string'],
             'primary_color' =>  ['required', 'string'],
             'secondary_color' =>  ['string'],
             "weight" => ['min:0', 'numeric'],

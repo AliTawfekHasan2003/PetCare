@@ -189,6 +189,7 @@ class AnimalController extends Controller
             'size' =>  $request->size, 
             'desc' =>  $request->desc,
             'health_status' =>  $request->health_status,
+            'name' => $request->name,
             'birth_date' =>  $request->birth_date,     
         ]);
 

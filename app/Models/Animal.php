@@ -11,6 +11,7 @@ class Animal extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'name',
         'user_id',
         'category_id',
         'breed_id',
