@@ -75,7 +75,7 @@ class AnimalController extends Controller
      
     public function index(GetRequest $request)
     {
-        $q = Animal::query()->where('status', 'accepted')->with(['category', 'breed', 'attachments']);
+        $q = Animal::query()->where('status', 'accepted')->with(['category', 'breed', 'attachments', 'user']);
 
         if($request->category_id){
             $q->where('category_id', $request->category_id);
@@ -124,7 +124,7 @@ class AnimalController extends Controller
     */
     public function show(Animal $animal)
     {  
-        $animal->load(['category', 'breed', 'attachments']);
+        $animal->load(['category', 'breed', 'attachments', 'user']);
 
         return response()->json(new AnimalResource($animal));
     }

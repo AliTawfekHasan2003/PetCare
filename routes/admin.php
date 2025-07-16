@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AnimalController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
@@ -26,3 +27,7 @@ Route::apiResource('roles', RoleController::class);
 
 // users
 Route::apiResource('users' , UserController::class);
+
+//animals
+Route::get('pending-animals', [AnimalController::class, 'pending_animals']);
+Route::post('pending-animals/{animal}/change-animal-status', [AnimalController::class, 'change_animal_status']);
