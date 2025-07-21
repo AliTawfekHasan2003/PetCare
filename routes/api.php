@@ -18,14 +18,14 @@ use App\Http\Controllers\CategoryController;
 */
 use Illuminate\Support\Facades\Storage;
 
-Route::get('/list-files', function() {
+Route::get('/list-files', function () {
     $files = Storage::disk('public')->allFiles('animals');
     return response()->json($files);
 });
 //Auth
-Route::post('login'  , [AuthController::class, 'login']);
-Route::post('register' , [AuthController::class, 'register']);
-Route::post('verify-account' , [AuthController::class, 'verify_account']);
+Route::post('login', [AuthController::class, 'login']);
+Route::post('register', [AuthController::class, 'register']);
+Route::post('verify-account', [AuthController::class, 'verify_account']);
 Route::post('logout', [AuthController::class, 'logout']);
 
 Route::put('user', [AuthController::class, 'edit_profile']);
@@ -36,6 +36,7 @@ Route::delete('user/delete_account', [AuthController::class, 'delete_user']);
 Route::get('animals', [AnimalController::class, 'index']);
 Route::post('animals', [AnimalController::class, 'store']);
 Route::get('animals/{animal}', [AnimalController::class, 'show']);
+Route::post('animals/{animal}/adoption-request', [AnimalController::class, 'store_adoption_request']);
 
 //categories
 Route::get('categories', [CategoryController::class, 'index']);

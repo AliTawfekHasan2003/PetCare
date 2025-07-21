@@ -162,6 +162,55 @@
                 ]
             }
         },
+        "/admin/adoption-requests": {
+            "get": {
+                "tags": [
+                    "Admin - Animals"
+                ],
+                "description": "Get all adoption requests",
+                "operationId": "get_adoption_requests",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "animal_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "with_paginate",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
         "/admin/permissions": {
             "get": {
                 "tags": [
@@ -1131,6 +1180,187 @@
                         "description": "Success"
                     }
                 }
+            }
+        },
+        "/animals/{id}/adoption-request": {
+            "post": {
+                "tags": [
+                    "User - Animals"
+                ],
+                "description": "sent adoption request for specific animal",
+                "operationId": "adoption-request",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "address": {
+                                        "type": "string"
+                                    },
+                                    "family_members_count": {
+                                        "description": "Number of family members",
+                                        "type": "integer",
+                                        "example": 4
+                                    },
+                                    "has_children": {
+                                        "description": "Whether there are children in the house",
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ]
+                                    },
+                                    "children_ages[0]": {
+                                        "description": "Ages of children, if any",
+                                        "type": "integer",
+                                        "example": 10
+                                    },
+                                    "job_title": {
+                                        "description": "Job title",
+                                        "type": "string",
+                                        "example": "Software Engineer"
+                                    },
+                                    "company_name": {
+                                        "description": "Name of the company or organization",
+                                        "type": "string",
+                                        "example": "Tech Corp"
+                                    },
+                                    "work_hours_per_day": {
+                                        "description": "Number of work hours per day",
+                                        "type": "integer",
+                                        "example": 8
+                                    },
+                                    "work_type": {
+                                        "description": "Work type",
+                                        "type": "string",
+                                        "enum": [
+                                            "remote",
+                                            "on-site",
+                                            "hybrid"
+                                        ],
+                                        "example": "remote"
+                                    },
+                                    "housing_type": {
+                                        "description": "Type of housing",
+                                        "type": "string",
+                                        "enum": [
+                                            "apartment",
+                                            "house",
+                                            "villa"
+                                        ],
+                                        "example": "house"
+                                    },
+                                    "is_rented": {
+                                        "description": "Is the housing rented?",
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ]
+                                    },
+                                    "landlord_name": {
+                                        "description": "Landlord name (if rented)",
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "landlord_phone": {
+                                        "description": "Landlord phone (if rented)",
+                                        "type": "string",
+                                        "example": "+1234567890"
+                                    },
+                                    "landlord_allows_pets": {
+                                        "description": "Does landlord allow pets?",
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ]
+                                    },
+                                    "has_garden": {
+                                        "description": "Is there a garden at home?",
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ]
+                                    },
+                                    "has_patience": {
+                                        "description": "Do you have patience for the animal?",
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ]
+                                    },
+                                    "can_handle_issues": {
+                                        "description": "Are you ready to handle health/behavior issues?",
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ]
+                                    },
+                                    "hours_with_pet_daily": {
+                                        "description": "Hours spent daily with the animal",
+                                        "type": "integer",
+                                        "example": 4
+                                    },
+                                    "someone_home_24_7": {
+                                        "description": "Is someone present at home 24/7?",
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ]
+                                    },
+                                    "can_be_with_pet_when_sick": {
+                                        "description": "Can you stay with the animal if it gets sick?",
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ]
+                                    },
+                                    "agreed_to_terms": {
+                                        "description": "Has the user agreed to the terms?",
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ]
+                                    },
+                                    "notes": {
+                                        "description": "Additional notes",
+                                        "type": "string",
+                                        "example": "I have experience with pets and a big garden."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
             }
         },
         "/register": {
