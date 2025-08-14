@@ -31,3 +31,4 @@ Route::apiResource('users' , UserController::class);
 //animals
 Route::get('pending-animals', [AnimalController::class, 'pending_animals']);
 Route::post('pending-animals/{animal}/change-animal-status', [AnimalController::class, 'change_animal_status']);
+Route::get('adoption-requests', [AnimalController::class, 'adoption_requests']);

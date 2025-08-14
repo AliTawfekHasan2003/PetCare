@@ -17,19 +17,16 @@ return new class extends Migration
             $table->foreignId('animal_id')->constrained('animals');
             $table->enum('status', ['accepted', 'rejected', 'pending'])->default('pending');
 
-            // معلومات العائلة
             $table->integer('family_members_count')->nullable();
             $table->string('address')->nullable();
             $table->boolean('has_children')->nullable();
             $table->json('children_ages')->nullable(); 
 
-            // العمل
             $table->string('job_title')->nullable();
             $table->string('company_name')->nullable();
             $table->integer('work_hours_per_day')->nullable();
             $table->enum('work_type', ['remote', 'on_site', 'hybrid'])->nullable();
 
-            // السكن
             $table->enum('housing_type', ['apartment', 'house', 'villa'])->nullable();
             $table->boolean('is_rented')->nullable();
             $table->string('landlord_name')->nullable();
@@ -37,14 +34,12 @@ return new class extends Migration
             $table->boolean('landlord_allows_pets')->nullable();
             $table->boolean('has_garden')->nullable();
 
-            // الاستعداد والرعاية
             $table->boolean('has_patience')->nullable();
             $table->boolean('can_handle_issues')->nullable(); // صحية وسلوكية
             $table->integer('hours_with_pet_daily')->nullable();
             $table->boolean('someone_home_24_7')->nullable();
             $table->boolean('can_be_with_pet_when_sick')->nullable();
 
-            // الموافقة والملاحظات
             $table->boolean('agreed_to_terms')->nullable();
             $table->text('notes')->nullable();
 
