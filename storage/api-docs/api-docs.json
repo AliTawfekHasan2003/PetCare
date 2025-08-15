@@ -211,6 +211,47 @@
                 ]
             }
         },
+        "/admin/contact-messages": {
+            "get": {
+                "tags": [
+                    "Admin - Contact Us"
+                ],
+                "description": "Get all  messages",
+                "operationId": "get_all_messages",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "with_paginate",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
         "/admin/permissions": {
             "get": {
                 "tags": [
@@ -1246,7 +1287,7 @@
                                         "type": "string",
                                         "enum": [
                                             "remote",
-                                            "on-site",
+                                            "on_site",
                                             "hybrid"
                                         ],
                                         "example": "remote"
@@ -1634,12 +1675,62 @@
                     }
                 }
             }
+        },
+        "/contact-messages": {
+            "post": {
+                "tags": [
+                    "User - Contact Us"
+                ],
+                "description": "Sent new message.",
+                "operationId": "add_message",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "message"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
         }
     },
     "tags": [
         {
             "name": "Admin - Animals",
             "description": "Admin - Animals"
+        },
+        {
+            "name": "Admin - Contact Us",
+            "description": "Admin - Contact Us"
         },
         {
             "name": "Permissions",
@@ -1668,6 +1759,10 @@
         {
             "name": "User - Categories",
             "description": "User - Categories"
+        },
+        {
+            "name": "User - Contact Us",
+            "description": "User - Contact Us"
         }
     ],
     "components": {

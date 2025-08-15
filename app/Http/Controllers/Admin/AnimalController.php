@@ -76,7 +76,7 @@ class AnimalController extends Controller
      
     public function pending_animals(GetRequest $request)
     {
-        $q = Animal::query()->where('status', 'pending')->with(['category', 'breed', 'attachments', 'user']);
+        $q = Animal::query()->where('status', 'pending')->with(['category', 'breed', 'attachments', 'user'])->latest();
 
         if($request->category_id){
             $q->where('category_id', $request->category_id);
@@ -179,7 +179,7 @@ class AnimalController extends Controller
 
     public function adoption_requests(GetRequest $request)
     {
-        $q = AdoptionRequest::query()->where('status', 'pending')->with(['user', 'animal', 'animal.category', 'animal.breed', 'animal.attachments']);
+        $q = AdoptionRequest::query()->where('status', 'pending')->with(['user', 'animal', 'animal.category', 'animal.breed', 'animal.attachments'])->latest();
 
         if($request->user_id){
             $q->where('user_id', $request->user_id);

@@ -78,7 +78,7 @@ class AnimalController extends Controller
 
     public function index(GetRequest $request)
     {
-        $q = Animal::query()->where('status', 'accepted')->with(['category', 'breed', 'attachments', 'user']);
+        $q = Animal::query()->where('status', 'accepted')->with(['category', 'breed', 'attachments', 'user'])->latest();
 
         if ($request->category_id) {
             $q->where('category_id', $request->category_id);
@@ -272,7 +272,7 @@ class AnimalController extends Controller
      *                 @OA\Property(
      *                     property="work_type",
      *                     type="string",
-     *                     enum={"remote", "on-site", "hybrid"},
+     *                     enum={"remote", "on_site", "hybrid"},
      *                     example="remote",
      *                     description="Work type"
      *                 ),

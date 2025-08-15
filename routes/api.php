@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BreedController;
 use App\Http\Controllers\CategoryController;
-
+use App\Http\Controllers\ContactMessageController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -43,3 +43,6 @@ Route::get('categories', [CategoryController::class, 'index']);
 
 //breeds
 Route::get('breeds', [BreedController::class, 'index']);
+
+//contact-messages
+Route::post('/contact-messages', [ContactMessageController::class, 'store']);
