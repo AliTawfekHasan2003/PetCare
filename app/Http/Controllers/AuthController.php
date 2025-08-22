@@ -123,6 +123,56 @@ class AuthController extends Controller
         }
 
     /**
+     * @OA\Post(
+     * path="/dashboard-login",
+     * description="Login by password and (email or phone) to dashboard",
+     * operationId="authAdminLogin",
+     * tags={"Admin - Auth"},
+     *   @OA\RequestBody(
+     *       required=true,
+     *       @OA\MediaType(
+     *           mediaType="multipart/form-data",
+     *           @OA\Schema(
+     *              required={"email_or_phone","password"},
+     *              @OA\Property(property="email_or_phone" ,type="string"),
+     *              @OA\Property(property="password", type="password"),
+     *           )
+     *       )
+     *   ),
+     * @OA\Response(
+     *     response=200,
+     *     description="successful operation",
+     *  ),
+     *  )
+    */
+    public function dashboard_login(Request $request)
+    {
+        $request->validate( [
+            'email_or_phone'    => ['required'],
+            'password' => ['required','min:6'],
+        ]);
+
+        $user = User::where('email', $request->email_or_phone)->orWhere('phone', $request->email_or_phone)->first();
+        //TODO: check if the user verified or not 
+
+        if(!$user || !Hash::check($request->password, $user->password) || !$user->hasRole('admin'))
+        {
+            return response()->json([
+                'message' => 'email or phone or password is incorrect.',
+                'errors' => [
+                    'email_or_phone' => ['email or password is incorrect.']
+                ]
+            ], 422);    
+        }
+            $token = $user->createToken('Sanctum', [])->plainTextToken;
+            
+            return response()->json([
+                'user' => new UserResource($user),
+                'token' => $token,
+            ], 200);
+        }
+
+    /**
      * @OA\Get(
      * path="/user",
      * description="Get your profile",

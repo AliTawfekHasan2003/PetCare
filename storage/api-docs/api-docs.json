@@ -1565,6 +1565,42 @@
                 }
             }
         },
+        "/dashboard-login": {
+            "post": {
+                "tags": [
+                    "Admin - Auth"
+                ],
+                "description": "Login by password and (email or phone) to dashboard",
+                "operationId": "authAdminLogin",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "email_or_phone",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email_or_phone": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
         "/user": {
             "get": {
                 "tags": [
@@ -1837,6 +1873,10 @@
         {
             "name": "User - Auth",
             "description": "User - Auth"
+        },
+        {
+            "name": "Admin - Auth",
+            "description": "Admin - Auth"
         },
         {
             "name": "User - Breeds",

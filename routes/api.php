@@ -46,3 +46,6 @@ Route::get('breeds', [BreedController::class, 'index']);
 
 //contact-messages
 Route::post('/contact-messages', [ContactMessageController::class, 'store']);
+
+//dashboard-login
+Route::post('dashboard-login', [AuthController::class, 'dashboard_login']);
