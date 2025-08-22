@@ -10,9 +10,6 @@ use Illuminate\Routing\Controller as BaseController;
  * @OA\Info(title="API PetCare", version="1.0")
  *
  *  @OA\Server(
- *      url="https://petcare-production-cc6b.up.railway.app/api",
- *  )
- *  @OA\Server(
  *      url="http://127.0.0.1:8000/api",
  *  )
  * @OA\Server(

@@ -6,9 +6,6 @@
     },
     "servers": [
         {
-            "url": "https://petcare-production-cc6b.up.railway.app/api"
-        },
-        {
             "url": "http://127.0.0.1:8000/api"
         },
         {
@@ -16,6 +13,135 @@
         }
     ],
     "paths": {
+        "/admin/pending-adoption-requests": {
+            "get": {
+                "tags": [
+                    "Admin - Adoption Requests"
+                ],
+                "description": "Get all pending adoption requests",
+                "operationId": "get_adoption_requests",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "animal_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "with_paginate",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,
+                                1
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/admin/pending-adoption-requests/{id}": {
+            "get": {
+                "tags": [
+                    "Admin - Adoption Requests"
+                ],
+                "description": "Get specific pending adoption request",
+                "operationId": "show_pending_adoption_request",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/admin/pending-adoption-requests/{id}/change-adoption-request-status": {
+            "post": {
+                "tags": [
+                    "Admin - Adoption Requests"
+                ],
+                "description": "accept or reject adoption requests",
+                "operationId": "change_adoption_request_status",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "new_status"
+                                ],
+                                "properties": {
+                                    "new_status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "accepted",
+                                            "rejected"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
         "/admin/pending-animals": {
             "get": {
                 "tags": [
@@ -111,6 +237,35 @@
                 ]
             }
         },
+        "/admin/pending-animals/{id}": {
+            "get": {
+                "tags": [
+                    "Admin - Animals"
+                ],
+                "description": "Get specific pending animal",
+                "operationId": "show_pending_animal",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
         "/admin/pending-animals/{id}/change-animal-status": {
             "post": {
                 "tags": [
@@ -150,55 +305,6 @@
                         }
                     }
                 },
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                },
-                "security": [
-                    {
-                        "bearer_token": []
-                    }
-                ]
-            }
-        },
-        "/admin/adoption-requests": {
-            "get": {
-                "tags": [
-                    "Admin - Animals"
-                ],
-                "description": "Get all adoption requests",
-                "operationId": "get_adoption_requests",
-                "parameters": [
-                    {
-                        "name": "user_id",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "animal_id",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "with_paginate",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "enum": [
-                                0,
-                                1
-                            ]
-                        }
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Success"
@@ -1724,6 +1830,10 @@
         }
     },
     "tags": [
+        {
+            "name": "Admin - Adoption Requests",
+            "description": "Admin - Adoption Requests"
+        },
         {
             "name": "Admin - Animals",
             "description": "Admin - Animals"

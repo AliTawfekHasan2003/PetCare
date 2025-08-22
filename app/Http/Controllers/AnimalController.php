@@ -78,7 +78,10 @@ class AnimalController extends Controller
 
     public function index(GetRequest $request)
     {
-        $q = Animal::query()->where('status', 'accepted')->with(['category', 'breed', 'attachments', 'user'])->latest();
+        $q = Animal::query()->where('status', 'accepted')
+         ->whereHas('adoption_requests', function($query){
+             return $query->where('status', '!=', 'accepted');
+         })->with(['category', 'breed', 'attachments', 'user'])->latest();
 
         if ($request->category_id) {
             $q->where('category_id', $request->category_id);
@@ -127,6 +130,9 @@ class AnimalController extends Controller
      */
     public function show(Animal $animal)
     {
+        if($animal->status != 'accepted')  
+            return response()->json(['this animal is not accepted'], 400);
+
         $animal->load(['category', 'breed', 'attachments', 'user']);
 
         return response()->json(new AnimalResource($animal));

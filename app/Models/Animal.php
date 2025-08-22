@@ -48,4 +48,9 @@ class Animal extends Model
   {
     return $this->hasMany(Attachment::class);
   }
+
+  public function adoption_requests()
+  {
+    return $this->hasMany(AdoptionRequest::class);
+  }
 }
