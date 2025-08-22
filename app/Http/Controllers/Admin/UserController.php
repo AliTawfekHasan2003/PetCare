@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Exports\UserExport;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\GetRequest;
 use App\Http\Resources\AddressResource;
 use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Auth;
@@ -51,12 +52,6 @@ class UserController extends Controller
      *   ),
      * @OA\Parameter(
      *     in="query",
-     *     name="status",
-     *     required=false,
-     *     @OA\Schema(type="integer",enum={0, 1})
-     *   ),
-     * @OA\Parameter(
-     *     in="query",
      *     name="start_date",
      *     required=false,
      *     @OA\Schema(type="date")
@@ -66,12 +61,6 @@ class UserController extends Controller
      *     name="end_date",
      *     required=false,
      *     @OA\Schema(type="date")
-     *   ),
-     * @OA\Parameter(
-     *     in="query",
-     *     name="type",
-     *     required=false,
-     *     @OA\Schema(type="string",enum={"employee"})
      *   ),
      * @OA\Parameter(
      *     in="query",
@@ -94,26 +83,9 @@ class UserController extends Controller
      *   ),
      * )
     */
-    public function index(Request $request)
+    public function index(GetRequest $request)
     {
-        $request->validate([
-            'q'                   => ['string'],
-            'role_id'             => ['exists:roles,id'],
-            'status'              => ['integer', 'in:1,0'],
-            'start_date'          => ['date_format:Y-m-d'],
-            'end_date'            => ['date_format:Y-m-d'],
-            'type'                => ['in:employee'],
-            'with_paginate'       => ['integer', 'in:0,1'],
-            'per_page'            => ['integer', 'min:1']
-        ]);
-
-        $q = User::query();
-
-        if($request->status === '0'){
-            $q->where('status', false);
-        }else if ($request->status === '1') {
-            $q->where('status', true);
-        }
+        $q = User::query()->latest();
 
         if($request->start_date)
             $q->where('created_at','>=', $request->start_date);
@@ -132,12 +104,6 @@ class UserController extends Controller
         if($request->role_id){
             $user_ids = DB::table('model_has_roles')->where('model_type', User::class)
                             ->where('role_id', $request->role_id)->pluck('model_id');
-            $q->whereIn('id', $user_ids);
-        }
-
-        if($request->type == 'employee'){
-            $user_ids = DB::table('model_has_roles')->where('model_type', User::class)
-                        ->whereNotIn('role_id', [2, 3])->pluck('model_id');
             $q->whereIn('id', $user_ids);
         }
 
@@ -166,11 +132,7 @@ class UserController extends Controller
      *              @OA\Property(property="email",format="email", type="string"),
      *              @OA\Property(property="password", type="string"),
      *              @OA\Property(property="password_confirmation", type="string"),
-     *              @OA\Property(property="phone_country_id", type="integer"),
      *              @OA\Property(property="phone", type="string"),
-     *              @OA\Property(property="country_id", type="integer"),
-     *              @OA\Property(property="summary", type="string"),
-     *              @OA\Property(property="image", type="file"),
      *              @OA\Property(property="role_id", type="integer"),
      *           )
      *       )
@@ -186,33 +148,17 @@ class UserController extends Controller
         $request->validate([
             'name'              => ['required', 'string'],
             'email'             => ['required', 'string', 'email', 'unique:users'],
-            'phone_country_id'  => ['integer', 'exists:countries,id'],
-            'phone'             => ['required', 'size:8', 'unique:users'],
+            'phone'             => ['required', 'min:8', 'unique:users'],
             'password'          => ['required', 'string', 'min:6', 'confirmed'],
-            'country_id'        => ['integer', 'exists:countries,id'],
-            'summary'           => ['string'],
-            'image'             => ['image'],
             'role_id'           => ['required', 'integer', 'exists:roles,id']
         ]);
-
-        $verified = null;
-        if(in_array($request->role_id, [2, 3]))
-            $verified = now();
-
-        $image = null;
-        if($request->image)
-            $image = upload_file($request->image, 'users', 'user');
 
         $user = User::create([
             'name'               => $request->name,
             'email'              => $request->email,
-            'phone_country_id'   => $request->phone_country_id,
             'phone'              => $request->phone,
-            'country_id'         => $request->country_id,
-            'summary'            => $request->summary,
             'password'           => Hash::make($request->password),
-            'email_verified_at'  => $verified,
-            'image'              => $image,
+            'email_verified_at'  => now(),
         ]);
         $role_name = Role::find($request->role_id)->name;
         $user->assignRole($role_name);
@@ -265,11 +211,7 @@ class UserController extends Controller
      *              required={"name","email","phone","role_id"},
      *              @OA\Property(property="name", type="string"),
      *              @OA\Property(property="email",format="email", type="string"),
-     *              @OA\Property(property="phone_country_id", type="integer"),
      *              @OA\Property(property="phone", type="string"),
-     *              @OA\Property(property="country_id", type="integer"),
-     *              @OA\Property(property="summary", type="string"),
-     *              @OA\Property(property="image", type="file"),
      *              @OA\Property(property="role_id", type="integer"),
      *         @OA\Property(property="_method", type="string", format="string", example="PUT"),
      *       )
@@ -286,34 +228,15 @@ class UserController extends Controller
         $request->validate([
             'name'                  => ['required', 'string'],
             'email'                 => ['required', 'string', 'email', Rule::unique('users', 'email')->ignore($user->id)],
-            'phone_country_id'      => ['integer', 'exists:countries,id'],
-            'phone'                 => ['required', 'size:8', Rule::unique('users', 'phone')->ignore($user->id)],
-            'country_id'            => ['integer', 'exists:countries,id'],
-            'summary'               => ['string'],
-            'image'                 => [''],
+            'phone'                 => ['required','min:8', Rule::unique('users', 'phone')->ignore($user->id)],
             'role_id'               => ['exists:roles,id'],
         ]);
 
         $role_name = $request->role_id?Role::find($request->role_id)->name:$user->role();
 
-        $image = null;
-        if($request->image){
-            if($request->image == $user->image){
-                $image = $user->image;
-            }else{
-                if(!is_file($request->image))
-                    throw ValidationException::withMessages(['image' => __('Image should be a file')]);
-                $image = upload_file($request->image, 'users', 'user');
-            }
-        }
-
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->phone_country_id = $request->phone_country_id;
         $user->phone = $request->phone;
-        $user->country_id = $request->country_id;
-        $user->summary = $request->summary;
-        $user->image = $image;
 
         if($request->password){
             $user->password = Hash::make($request->password);
@@ -351,7 +274,7 @@ class UserController extends Controller
     {
         $user->delete();
 
-        return response()->json(null,204);
+        return response()->json(null,200);
     }
 
     /**

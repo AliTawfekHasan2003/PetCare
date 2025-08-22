@@ -22,6 +22,10 @@ class GetRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'q'                   => ['string'],
+            'role_id'             => ['exists:roles,id'],
+            'start_date'          => ['date_format:Y-m-d'],
+            'end_date'            => ['date_format:Y-m-d'],
             'gender' => ['in:male,female'],
             'size'   => ['in:small,medium,large'],
             'health_status' => ['string', 'in:healthy,injured,sick'],

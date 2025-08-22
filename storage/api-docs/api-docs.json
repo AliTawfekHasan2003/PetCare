@@ -760,18 +760,6 @@
                         }
                     },
                     {
-                        "name": "status",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "enum": [
-                                0,
-                                1
-                            ]
-                        }
-                    },
-                    {
                         "name": "start_date",
                         "in": "query",
                         "required": false,
@@ -785,17 +773,6 @@
                         "required": false,
                         "schema": {
                             "type": "date"
-                        }
-                    },
-                    {
-                        "name": "type",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "employee"
-                            ]
                         }
                     },
                     {
@@ -861,20 +838,8 @@
                                     "password_confirmation": {
                                         "type": "string"
                                     },
-                                    "phone_country_id": {
-                                        "type": "integer"
-                                    },
                                     "phone": {
                                         "type": "string"
-                                    },
-                                    "country_id": {
-                                        "type": "integer"
-                                    },
-                                    "summary": {
-                                        "type": "string"
-                                    },
-                                    "image": {
-                                        "type": "file"
                                     },
                                     "role_id": {
                                         "type": "integer"
@@ -960,20 +925,8 @@
                                         "type": "string",
                                         "format": "email"
                                     },
-                                    "phone_country_id": {
-                                        "type": "integer"
-                                    },
                                     "phone": {
                                         "type": "string"
-                                    },
-                                    "country_id": {
-                                        "type": "integer"
-                                    },
-                                    "summary": {
-                                        "type": "string"
-                                    },
-                                    "image": {
-                                        "type": "file"
                                     },
                                     "role_id": {
                                         "type": "integer"
