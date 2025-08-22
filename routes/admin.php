@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ContactMessageController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\StatisticController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -42,3 +43,6 @@ Route::post('pending-adoption-requests/{adoption_request}/change-adoption-reques
 
 //contact-messages
 Route::get('/contact-messages', [ContactMessageController::class, 'index']);
+
+//statistics
+Route::get('statistics', [StatisticController::class, 'index']);
