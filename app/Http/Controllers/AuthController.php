@@ -17,7 +17,7 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:sanctum')->only(['logout','get_profile','update_my_profile','delete_user']);
+        $this->middleware('auth:sanctum')->only(['logout','get_profile','edit_profile','delete_user']);
     }
     
     /**
@@ -222,13 +222,14 @@ class AuthController extends Controller
     */
 
     public function edit_profile(Request $request){
+        return auth()->id();
         $user = to_user(Auth::user());
         //TODO: required if the user is a shaer
 
         $request->validate([
             'name'                  => ['required', 'string'],
             'phone_country_id'      => ['integer', 'exists:countries,id'],
-            'phone'                 => ['required', 'size:8', Rule::unique('users', 'phone')->ignore($user->id)],
+            'phone'                 => ['required', 'min:8', Rule::unique('users', 'phone')->ignore($user->id)],
             'country_id'            => ['integer', 'exists:countries,id'],
             'summary'               => ['string'],
             'image'                 => ['image'],
