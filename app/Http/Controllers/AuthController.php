@@ -222,7 +222,6 @@ class AuthController extends Controller
     */
 
     public function edit_profile(Request $request){
-        return auth()->id();
         $user = to_user(Auth::user());
         //TODO: required if the user is a shaer
 
