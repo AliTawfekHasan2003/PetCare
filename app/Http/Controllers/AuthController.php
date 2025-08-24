@@ -205,11 +205,8 @@ class AuthController extends Controller
      *           mediaType="multipart/form-data",
      *           @OA\Schema(
      *              @OA\Property(property="name", type="string"),
-     *              @OA\Property(property="phone_country_id", type="integer"),
      *              @OA\Property(property="phone", type="string"),
-     *              @OA\Property(property="country_id", type="integer"),
-     *              @OA\Property(property="summary", type="string"),
-     *              @OA\Property(property="image", type="file"),
+     *              @OA\Property(property="email", type="steing"),
      *              @OA\Property(property="_method", type="string", format="string", example="PUT"),
      *           )
      *       )
@@ -229,22 +226,12 @@ class AuthController extends Controller
             'name'                  => ['required', 'string'],
             'phone_country_id'      => ['integer', 'exists:countries,id'],
             'phone'                 => ['required', 'min:8', Rule::unique('users', 'phone')->ignore($user->id)],
-            'country_id'            => ['integer', 'exists:countries,id'],
-            'summary'               => ['string'],
-            'image'                 => ['image'],
-            // 'email'               => ['required', 'string', 'email', Rule::unique('users', 'email')->ignore($user->id)],
+           'email'               => ['required', 'string', 'email', Rule::unique('users', 'email')->ignore($user->id)],
         ]);
-        
-        $image = null;
-        if($request->image)
-            $image = upload_file($request->image, 'users', 'user');
-        
+                
         $user->name = $request->name;
-        $user->phone_country_id = $request->phone_country_id;
         $user->phone = $request->phone;
-        $user->country_id = $request->country_id;
-        $user->summary = $request->summary;
-        $user->image = $image;
+        $user->email = $request->email;
 
         $user->save();
 
