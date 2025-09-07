@@ -95,7 +95,7 @@ class AdoptionRequestController extends Controller
 
         $adoption_request->load(['user', 'animal', 'animal.category', 'animal.breed', 'animal.attachments']);
 
-        return response()->json(new AnimalResource($adoption_request));
+        return response()->json(new AdoptionRequestResource($adoption_request));
     }
 
     /**
