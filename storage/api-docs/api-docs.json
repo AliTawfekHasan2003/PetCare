@@ -976,6 +976,12 @@
                                     "role_id": {
                                         "type": "integer"
                                     },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string"
+                                    },
                                     "_method": {
                                         "type": "string",
                                         "format": "string",
@@ -1017,86 +1023,6 @@
                 "responses": {
                     "200": {
                         "description": "Success"
-                    }
-                },
-                "security": [
-                    {
-                        "bearer_token": []
-                    }
-                ]
-            }
-        },
-        "/admin/users/{id}/reset_password": {
-            "post": {
-                "tags": [
-                    "Admin - Users"
-                ],
-                "description": "reset user password.",
-                "operationId": "79a90a10e9aa79ceb8ca022cc91efe22",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "required": [
-                                    "password",
-                                    "password_confirmation"
-                                ],
-                                "properties": {
-                                    "password": {
-                                        "type": "string"
-                                    },
-                                    "password_confirmation": {
-                                        "type": "string"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    }
-                },
-                "security": [
-                    {
-                        "bearer_token": []
-                    }
-                ]
-            }
-        },
-        "/admin/users/{id}/activate": {
-            "post": {
-                "tags": [
-                    "Admin - Users"
-                ],
-                "description": "activate the user.",
-                "operationId": "049105eab1f46407301541f17ccc7386",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
                     }
                 },
                 "security": [
@@ -1699,25 +1625,6 @@
                 "responses": {
                     "200": {
                         "description": "successful operation"
-                    }
-                },
-                "security": [
-                    {
-                        "bearer_token": []
-                    }
-                ]
-            }
-        },
-        "/users/delete_account": {
-            "delete": {
-                "tags": [
-                    "User - Auth"
-                ],
-                "description": "Delete my account",
-                "operationId": "delete_account",
-                "responses": {
-                    "200": {
-                        "description": "Success"
                     }
                 },
                 "security": [

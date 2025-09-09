@@ -140,6 +140,15 @@ class AdoptionRequestController extends Controller
 
         if($adoption_request->status != 'pending')  
             return response()->json(['this adoption request is not pending'], 400);
+        
+        $animal = $adoption_request->animal()->whereHas('adoption_requests', function($query){
+            return $query->where('status', 'accepted');
+        })->first();
+
+        if($animal)
+           return response()->json(['this animal already has been adopted'], 400);
+
+
 
         $adoption_request->status = $request->new_status;
         $adoption_request->save();

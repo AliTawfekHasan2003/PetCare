@@ -21,13 +21,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// roles and permissions
-Route::get('/permissions', [PermissionController::class, 'get_all_permissions']);
-Route::get('/permissions/me', [PermissionController::class, 'my_permissions']);
-Route::get('/roles/{role}/permissions', [PermissionController::class, 'get_permissions']);
-Route::post('/roles/{role}/permissions', [PermissionController::class, 'set_permissions']);
-Route::apiResource('roles', RoleController::class);
-
 // users
 Route::apiResource('users' , UserController::class);
 

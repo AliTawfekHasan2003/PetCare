@@ -25,12 +25,10 @@ Route::get('/list-files', function () {
 //Auth
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
-Route::post('verify-account', [AuthController::class, 'verify_account']);
 Route::post('logout', [AuthController::class, 'logout']);
 
 Route::put('user', [AuthController::class, 'edit_profile']);
 Route::get('user', [AuthController::class, 'get_profile']);
-Route::delete('user/delete_account', [AuthController::class, 'delete_user']);
 
 //animals
 Route::get('animals', [AnimalController::class, 'index']);

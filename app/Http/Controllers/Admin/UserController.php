@@ -29,9 +29,7 @@ class UserController extends Controller
     public function __construct()
     {
         $this->middleware('auth:sanctum');
-        $this->middleware('permission:users.read|users.write|users.delete')->only('index', 'show', 'export', 'get_user_favorites', 'get_user_address');
-        $this->middleware('permission:users.write')->only('store', 'update', 'reset_password', 'user_status_toggle');
-        $this->middleware('permission:users.delete')->only('destroy');
+        $this->middleware('role:admin');
     }
  
     /**
@@ -108,9 +106,9 @@ class UserController extends Controller
         }
 
         if ($request->with_paginate === '0')
-            $user = $q->with('permissions')->get();
+            $user = $q->get();
         else
-            $user = $q->with('permissions')->paginate($request->per_page ?? 10);
+            $user = $q->paginate($request->per_page ?? 10);
 
         return UserResource::collection($user);
     }
@@ -213,6 +211,8 @@ class UserController extends Controller
      *              @OA\Property(property="email",format="email", type="string"),
      *              @OA\Property(property="phone", type="string"),
      *              @OA\Property(property="role_id", type="integer"),
+     *              @OA\Property(property="password", type="string"),
+     *              @OA\Property(property="password_confirmation", type="string"),
      *         @OA\Property(property="_method", type="string", format="string", example="PUT"),
      *       )
      *     )
@@ -229,25 +229,21 @@ class UserController extends Controller
             'name'                  => ['required', 'string'],
             'email'                 => ['required', 'string', 'email', Rule::unique('users', 'email')->ignore($user->id)],
             'phone'                 => ['required','min:8', Rule::unique('users', 'phone')->ignore($user->id)],
-            'role_id'               => ['exists:roles,id'],
+            'password'              => ['required', 'string', 'min:6', 'confirmed'],
+            'role_id'               => ['required', 'integer', 'exists:roles,id'],
         ]);
 
         $role_name = $request->role_id?Role::find($request->role_id)->name:$user->role();
 
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->phone = $request->phone;
+        $user->update([
+            'name'               => $request->name,
+            'email'              => $request->email,
+            'phone'              => $request->phone,
+            'password'          => ['required', 'string', 'min:6', 'confirmed'],
+        ]);
 
-        if($request->password){
-            $user->password = Hash::make($request->password);
-        }
-
-        $user->save();
-
-        if($request->role_id){
-            $user->syncRoles($role_name);
-        }
-
+        $user->syncRoles($role_name);
+    
         return response()->json(new UserResource($user));
     }
     
@@ -275,72 +271,5 @@ class UserController extends Controller
         $user->delete();
 
         return response()->json(null,200);
-    }
-
-    /**
-     * @OA\Post(
-     * path="/admin/users/{id}/reset_password",
-     * description="reset user password.",
-     *   @OA\Parameter(
-     *     in="path",
-     *     name="id",
-     *     required=true,
-     *     @OA\Schema(type="string"),
-     *   ),
-     * tags={"Admin - Users"},
-     * security={{"bearer_token": {} }},
-     *   @OA\RequestBody(
-     *     required=true,
-     *     @OA\MediaType(
-     *       mediaType="multipart/form-data",
-     *       @OA\Schema(
-     *              required={"password","password_confirmation"},
-     *              @OA\Property(property="password", type="string"),
-     *              @OA\Property(property="password_confirmation", type="string"),
-     *       )
-     *     )
-     *   ),
-     * @OA\Response(
-     *    response=200,
-     *    description="successful operation",
-     *     ),
-     * )
-     * )
-    */
-    public function reset_password(Request $request, User $user)
-    {
-        $request->validate([
-            'password'         => ['required', 'string', 'min:6', 'confirmed'],
-        ]);
-        $user->update(['password'  => Hash::make($request->password),]);
-        return response()->json(new UserResource($user), 200);
-    }
-
-    /**
-     * @OA\Post(
-     * path="/admin/users/{id}/activate",
-     * description="activate the user.",
-     *   @OA\Parameter(
-     *     in="path",
-     *     name="id",
-     *     required=true,
-     *     @OA\Schema(type="string"),
-     *   ),
-     * tags={"Admin - Users"},
-     * security={{"bearer_token": {} }},
-     * @OA\Response(
-     *    response=200,
-     *    description="successful operation",
-     *     ),
-     * )
-     * )
-    */
-    public function user_status_toggle(User $user)
-    {
-        if($user->status)
-            DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->delete();
-
-        $user->update(['status' => !$user->status]);
-        return response()->json(new UserResource($user), 200);
     }
 }

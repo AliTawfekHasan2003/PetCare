@@ -17,7 +17,7 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:sanctum')->only(['logout','get_profile','edit_profile','delete_user']);
+        $this->middleware('auth:sanctum')->only(['logout','get_profile','edit_profile']);
     }
     
     /**
@@ -256,26 +256,5 @@ class AuthController extends Controller
     {
         $user = to_user(Auth::user());
         to_token($user->currentAccessToken())->delete();
-    }
-
-    
-    /**
-     * @OA\Delete(
-     * path="/users/delete_account",
-     * description="Delete my account",
-     * operationId="delete_account",
-     * tags={"User - Auth"},
-     * security={{"bearer_token":{}}},
-     * @OA\Response(
-     *    response=200,
-     *    description="Success"
-     * )
-     *)
-    */
-    public function delete_user()
-    {
-        $user = to_user(Auth::user());
-        $user->delete();
-        return response()->json(null, 204);
     }
 }

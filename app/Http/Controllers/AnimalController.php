@@ -365,7 +365,6 @@ class AnimalController extends Controller
 
     public function store_adoption_request(Animal $animal, AdoptionRequest $request)
     {
-        $validated = $request->validated();
 
         $adoptionRequest = ModelsAdoptionRequest::create([
             'animal_id' => $animal->id,
@@ -373,31 +372,31 @@ class AnimalController extends Controller
             'status' => 'pending',
             
     
-            'family_members_count' => $validated['family_members_count'],
-            'address' =>  $validated['address'],
-            'has_children' => $validated['has_children'],
-            'children_ages' => json_encode($validated['children_ages'] ?? []),
+            'family_members_count' => $request->family_members_count,
+            'address' =>  $request->address,
+            'has_children' => $request->has_children,
+            'children_ages' => json_encode($request->children_ages ?? []),
         
-            'job_title' => $validated['job_title'],
-            'company_name' => $validated['company_name'], 
-            'work_hours_per_day' => $validated['work_hours_per_day'],
-            'work_type' => $validated['work_type'], 
+            'job_title' => $request->job_title,
+            'company_name' => $request->company_name, 
+            'work_hours_per_day' => $request->work_hours_per_day,
+            'work_type' => $request->work_type, 
         
-            'housing_type' => $validated['housing_type'], 
-            'is_rented' => $validated['is_rented'],
-            'landlord_name' => $validated['landlord_name'],
-            'landlord_phone' => $validated['landlord_phone'],
-            'landlord_allows_pets' => $validated['landlord_allows_pets'], 
-            'has_garden' => $validated['has_garden'],
+            'housing_type' => $request->housing_type, 
+            'is_rented' => $request->is_rented,
+            'landlord_name' => $request->landlord_name, 
+            'landlord_phone' => $request->landlord_phone,
+            'landlord_allows_pets' => $request->landlord_allows_pets, 
+            'has_garden' => $request->has_garden,
         
-            'has_patience' => $validated['has_patience'],
-            'can_handle_issues' => $validated['can_handle_issues'],
-            'hours_with_pet_daily' => $validated['hours_with_pet_daily'], 
-            'someone_home_24_7' => $validated['someone_home_24_7'], 
-            'can_be_with_pet_when_sick' => $validated['can_be_with_pet_when_sick'], 
+            'has_patience' => $request->has_patience,
+            'can_handle_issues' => $request->can_handle_issues,
+            'hours_with_pet_daily' => $request->hours_with_pet_daily, 
+            'someone_home_24_7' => $request->someone_home_24_7, 
+            'can_be_with_pet_when_sick' => $request->can_be_with_pet_when_sick, 
         
-            'agreed_to_terms' => $validated['agreed_to_terms'], 
-            'notes' => $validated['notes'],
+            'agreed_to_terms' => $request->agreed_to_terms, 
+            'notes' => $request->notes,
         ]);
     
         return response()->json(new AdoptionRequestResource($adoptionRequest->load(['user', 'animal', 'animal.category', 'animal.breed', 'animal.attachments'])));
