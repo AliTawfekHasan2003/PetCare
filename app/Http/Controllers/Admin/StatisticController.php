@@ -32,18 +32,29 @@ class StatisticController extends Controller
     public function index(GetRequest $request)
     {
 
-        $all_animals = Animal::all()->count();
-        $animals_now = Animal::where('status', 'accepted')
+        $website_animals = Animal::where('status', 'accepted')
         ->whereHas('adoption_requests', function($query){
             return $query->where('status', '!=', 'accepted');
         })->count();
 
+        $pending_animals = Animal::where('status', 'pending')->count();
+        $rejected_animals = Animal::where('status', 'rejected')->count();
+        $accepted_animals = Animal::where('status', 'accepted')->count();
+
         $all_adoption_requests = AdoptionRequest::all()->count();
+        $pending_adoption_requests = AdoptionRequest::where('status', 'pending')->count();
+        $accepted_adoption_requests = AdoptionRequest::where('status', 'accepted')->count();
+        $rejected_adoption_requests = AdoptionRequest::where('status', 'rejected')->count();
 
         return response()->json([
-                'all_animals_for_adoption' => $all_animals,
-                'animals_for_adoption_now' => $animals_now,
                 'all_adoption_requests' => $all_adoption_requests,
+                'pending_adoption_requests' => $pending_adoption_requests,
+                'accepted_adoption_requests' => $accepted_adoption_requests,
+                'rejected_adoption_requests' => $rejected_adoption_requests,
+                'website_animals' => $website_animals,
+                'all_pending_animals' => $pending_animals,
+                'all_rejected_animals' => $rejected_animals,
+                'all_accepted_animals' => $accepted_animals,
           ], 200);
     }
 }
