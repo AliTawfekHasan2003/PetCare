@@ -32,13 +32,13 @@ Route::apiResource('roles', RoleController::class);
 Route::apiResource('users' , UserController::class);
 
 //animals
-Route::get('pending-animals', [AnimalController::class, 'pending_animals']);
-Route::get('pending-animals/{animal}', [AnimalController::class, 'show_pending_animal']);
+Route::get('animals', [AnimalController::class, 'index']);
+Route::get('animals/{animal}', [AnimalController::class, 'show']);
 Route::post('pending-animals/{animal}/change-animal-status', [AnimalController::class, 'change_animal_status']);
 
 //adoption_requests
-Route::get('pending-adoption-requests', [AdoptionRequestController::class, 'pending_adoption_requests']);
-Route::get('pending-adoption-requests/{adoption_request}', [AdoptionRequestController::class, 'show_pending_adoption_request']);
+Route::get('adoption-requests', [AdoptionRequestController::class, 'index']);
+Route::get('adoption-requests/{adoption_request}', [AdoptionRequestController::class, 'show']);
 Route::post('pending-adoption-requests/{adoption_request}/change-adoption-request-status', [AdoptionRequestController::class, 'change_adoption_request_status']);
 
 //contact-messages

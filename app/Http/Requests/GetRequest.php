@@ -32,6 +32,7 @@ class GetRequest extends FormRequest
             'category_id' => ['integer', 'exists:categories,id'],
             'breed_id' =>['integer', 'exists:breeds,id'],
             'user_id' =>['integer', 'exists:users,id'],
+            'status' => ['in:pending,accepted,rejected'],
             'animal_id' =>['integer', 'exists:animals,id'],
             'with_paginate'       => ['integer', 'in:0,1'],
             'per_page'            => ['integer', 'min:1']

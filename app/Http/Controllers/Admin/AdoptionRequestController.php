@@ -19,8 +19,8 @@ class AdoptionRequestController extends Controller
 
     /**
      * @OA\Get(
-     *   path="/admin/pending-adoption-requests",
-     *   description="Get all pending adoption requests",
+     *   path="/admin/adoption-requests",
+     *   description="Get all adoption requests",
      *   operationId="get_adoption_requests",
      *   tags={"Admin - Adoption Requests"},
      *   security={{"bearer_token": {} }},
@@ -38,6 +38,12 @@ class AdoptionRequestController extends Controller
      *   ),
      *   @OA\Parameter(
      *     in="query",
+     *     name="status",
+     *     required=false,
+     *     @OA\Schema(type="string",  enum={"pending", "accepted", "rejected"}),
+     *   ),
+     *   @OA\Parameter(
+     *     in="query",
      *     name="with_paginate",
      *     required=false,
      *     @OA\Schema(type="integer",enum={0, 1})
@@ -49,9 +55,12 @@ class AdoptionRequestController extends Controller
      * )
     */
 
-    public function pending_adoption_requests(GetRequest $request)
+    public function index(GetRequest $request)
     {
-        $q = AdoptionRequest::query()->where('status', 'pending')->with(['user', 'animal', 'animal.category', 'animal.breed', 'animal.attachments'])->latest();
+        $q = AdoptionRequest::query()->with(['user', 'animal', 'animal.category', 'animal.breed', 'animal.attachments'])->latest();
+
+        if($request->status)
+            $q->where('status', $request->status);
 
         if($request->user_id){
             $q->where('user_id', $request->user_id);
@@ -71,7 +80,7 @@ class AdoptionRequestController extends Controller
 
     /**
      * @OA\Get(
-     *   path="/admin/pending-adoption-requests/{id}",
+     *   path="/admin/adoption-requests/{id}",
      *   description="Get specific pending adoption request",
      *   @OA\Parameter(
      *     in="path",
@@ -88,11 +97,8 @@ class AdoptionRequestController extends Controller
      *   ),
      * )
      */
-    public function show_pending_adoption_request(AdoptionRequest $adoption_request)
+    public function show(AdoptionRequest $adoption_request)
     {   
-        if($adoption_request->status != 'pending')  
-           return response()->json(['this adoption request is not pending'], 400);
-
         $adoption_request->load(['user', 'animal', 'animal.category', 'animal.breed', 'animal.attachments']);
 
         return response()->json(new AdoptionRequestResource($adoption_request));

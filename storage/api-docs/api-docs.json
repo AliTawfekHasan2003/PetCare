@@ -13,12 +13,12 @@
         }
     ],
     "paths": {
-        "/admin/pending-adoption-requests": {
+        "/admin/adoption-requests": {
             "get": {
                 "tags": [
                     "Admin - Adoption Requests"
                 ],
-                "description": "Get all pending adoption requests",
+                "description": "Get all adoption requests",
                 "operationId": "get_adoption_requests",
                 "parameters": [
                     {
@@ -35,6 +35,19 @@
                         "required": false,
                         "schema": {
                             "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "pending",
+                                "accepted",
+                                "rejected"
+                            ]
                         }
                     },
                     {
@@ -62,7 +75,7 @@
                 ]
             }
         },
-        "/admin/pending-adoption-requests/{id}": {
+        "/admin/adoption-requests/{id}": {
             "get": {
                 "tags": [
                     "Admin - Adoption Requests"
@@ -142,13 +155,13 @@
                 ]
             }
         },
-        "/admin/pending-animals": {
+        "/admin/animals": {
             "get": {
                 "tags": [
                     "Admin - Animals"
                 ],
-                "description": "Get pending animals",
-                "operationId": "get_pending_animals",
+                "description": "Get all animals",
+                "operationId": "get_animals_for_admin",
                 "parameters": [
                     {
                         "name": "category_id",
@@ -213,6 +226,19 @@
                         }
                     },
                     {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "pending",
+                                "accepted",
+                                "rejected"
+                            ]
+                        }
+                    },
+                    {
                         "name": "with_paginate",
                         "in": "query",
                         "required": false,
@@ -237,13 +263,13 @@
                 ]
             }
         },
-        "/admin/pending-animals/{id}": {
+        "/admin/animals/{id}": {
             "get": {
                 "tags": [
                     "Admin - Animals"
                 ],
                 "description": "Get specific pending animal",
-                "operationId": "show_pending_animal",
+                "operationId": "show_animal_for_admin",
                 "parameters": [
                     {
                         "name": "id",

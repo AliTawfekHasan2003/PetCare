@@ -18,9 +18,9 @@ class AnimalController extends Controller
 
     /**
      * @OA\Get(
-     *   path="/admin/pending-animals",
-     *   description="Get pending animals",
-     *   operationId="get_pending_animals",
+     *   path="/admin/animals",
+     *   description="Get all animals",
+     *   operationId="get_animals_for_admin",
      *   tags={"Admin - Animals"},
      *   security={{"bearer_token": {} }},
      *   @OA\Parameter(
@@ -61,6 +61,12 @@ class AnimalController extends Controller
      *   ),
      *   @OA\Parameter(
      *     in="query",
+     *     name="status",
+     *     required=false,
+     *     @OA\Schema(type="string",  enum={"pending", "accepted", "rejected"}),
+     *   ),
+     *   @OA\Parameter(
+     *     in="query",
      *     name="with_paginate",
      *     required=false,
      *     @OA\Schema(type="integer",enum={0, 1})
@@ -72,9 +78,12 @@ class AnimalController extends Controller
      * )
     */
      
-    public function pending_animals(GetRequest $request)
+    public function index (GetRequest $request)
     {
-        $q = Animal::query()->where('status', 'pending')->with(['category', 'breed', 'attachments', 'user'])->latest();
+        $q = Animal::query()->with(['category', 'breed', 'attachments', 'user'])->latest();
+
+        if($request->status)
+           $q->where('status', $request->status);
 
         if($request->category_id){
             $q->where('category_id', $request->category_id);
@@ -105,7 +114,7 @@ class AnimalController extends Controller
 
      /**
      * @OA\Get(
-     *   path="/admin/pending-animals/{id}",
+     *   path="/admin/animals/{id}",
      *   description="Get specific pending animal",
      *   @OA\Parameter(
      *     in="path",
@@ -113,7 +122,7 @@ class AnimalController extends Controller
      *     required=true,
      *     @OA\Schema(type="string"),
      *   ),
-     *   operationId="show_pending_animal",
+     *   operationId="show_animal_for_admin",
      *   tags={"Admin - Animals"},
      *   security={{"bearer_token": {} }},
      *   @OA\Response(
@@ -122,10 +131,8 @@ class AnimalController extends Controller
      *   ),
      * )
      */
-    public function show_pending_animal(Animal $animal)
+    public function show(Animal $animal)
     {   
-        if($animal->status != 'pending')  
-           return response()->json(['this animal is not pending'], 400);
 
         $animal->load(['category', 'breed', 'attachments', 'user']);
 
