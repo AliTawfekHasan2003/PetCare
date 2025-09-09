@@ -103,7 +103,6 @@ class AuthController extends Controller
         ]);
 
         $user = User::where('email', $request->email_or_phone)->orWhere('phone', $request->email_or_phone)->first();
-        //TODO: check if the user verified or not 
 
         if(!$user || !Hash::check($request->password, $user->password))
         {
@@ -153,7 +152,6 @@ class AuthController extends Controller
         ]);
 
         $user = User::where('email', $request->email_or_phone)->orWhere('phone', $request->email_or_phone)->first();
-        //TODO: check if the user verified or not 
 
         if(!$user || !Hash::check($request->password, $user->password) || !$user->hasRole('admin'))
         {
@@ -188,7 +186,6 @@ class AuthController extends Controller
     public function get_profile(Request $request)
     {
         $user = to_user(Auth::user());
-        $user->load('nationality', 'phone_country');
 
         return response()->json(new UserResource($user),200);
     }
@@ -220,20 +217,18 @@ class AuthController extends Controller
 
     public function edit_profile(Request $request){
         $user = to_user(Auth::user());
-        //TODO: required if the user is a shaer
 
         $request->validate([
             'name'                  => ['required', 'string'],
-            'phone_country_id'      => ['integer', 'exists:countries,id'],
             'phone'                 => ['required', 'min:8', Rule::unique('users', 'phone')->ignore($user->id)],
            'email'               => ['required', 'string', 'email', Rule::unique('users', 'email')->ignore($user->id)],
         ]);
                 
-        $user->name = $request->name;
-        $user->phone = $request->phone;
-        $user->email = $request->email;
-
-        $user->save();
+        $user->update([
+            'name'               => $request->name,
+            'email'              => $request->email,
+            'phone'              => $request->phone,
+        ]);
 
         return response()->json(new UserResource($user),200);
     }
