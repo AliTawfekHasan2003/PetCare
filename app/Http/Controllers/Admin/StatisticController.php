@@ -30,13 +30,13 @@ class StatisticController extends Controller
      */
 
     public function index(GetRequest $request)
-    {
+    {       
         $website_animals = Animal::where('status', 'accepted')
-        ->whereDoesntHave('adoption_requests') 
-        ->orWhereHas('adoption_requests', function($q){
-            $q->where('status', '!=', 'accepted'); 
-        })->count();
-
+        ->whereDoesntHave('adoption_requests', function($q){
+            $q->where('status', 'accepted'); // استبعاد الحيوانات التي لديها أي طلب مقبول
+        })
+        ->get();
+    
         $pending_animals = Animal::where('status', 'pending')->count();
         $rejected_animals = Animal::where('status', 'rejected')->count();
         $accepted_animals = Animal::where('status', 'accepted')->count();
