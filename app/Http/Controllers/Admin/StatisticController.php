@@ -33,9 +33,9 @@ class StatisticController extends Controller
     {       
         $website_animals = Animal::where('status', 'accepted')
         ->whereDoesntHave('adoption_requests', function($q){
-            $q->where('status', 'accepted'); // استبعاد الحيوانات التي لديها أي طلب مقبول
+            $q->where('status', 'accepted'); 
         })
-        ->get();
+        ->count();
     
         $pending_animals = Animal::where('status', 'pending')->count();
         $rejected_animals = Animal::where('status', 'rejected')->count();
