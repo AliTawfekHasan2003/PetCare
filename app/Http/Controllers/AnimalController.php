@@ -82,8 +82,7 @@ class AnimalController extends Controller
         ->where('status', 'accepted')
         ->whereDoesntHave('adoption_requests', function($q){
             $q->where('status', 'accepted');
-        }) ->with(['category', 'breed', 'attachments', 'user'])
-        ->latest();
+        }) ->with(['category', 'breed', 'attachments', 'user']);
     
         if ($request->category_id) {
             $q->where('category_id', $request->category_id);
