@@ -79,8 +79,9 @@ class AnimalController extends Controller
     public function index(GetRequest $request)
     {
         $q = Animal::query()->where('status', 'accepted')
-         ->whereHas('adoption_requests', function($query){
-             return $query->where('status', '!=', 'accepted');
+         ->whereDoesntHave('adoption_requests') 
+        ->orWhereHas('adoption_requests', function($q){
+            $q->where('status', '!=', 'accepted'); 
          })->with(['category', 'breed', 'attachments', 'user'])->latest();
 
         if ($request->category_id) {
